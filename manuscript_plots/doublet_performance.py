@@ -17,7 +17,7 @@ set_plot_params.init_paper_small()
 
 TOTAL_SEPARATION_LIST = [0.025, 0.05, 0.1, 0.15, 0.2]
 TOTAL_LOG10_NUM_ELECTRONS_LIST = [2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0]
-SPECTRA_SEPARATION_LIST = [0.05]
+SPECTRA_SEPARATION_LIST = [0.2]
 SPECTRA_LOG10_NUM_ELECTRONS_LIST = [3.0, 5.0, 7.0]
 
 FIGURES_DIR = 'figures'
@@ -33,23 +33,19 @@ def make_figure():
     _, axs = plt.subplots(2, 1, figsize=(3.37, 4.5))
     _make_spectra_plot(axs[0], spectra_data[0])
     _min_resolved_plot(axs[1], total_data, TOTAL_SEPARATION_LIST, TOTAL_LOG10_NUM_ELECTRONS_LIST)
+    #_format_figure(axs)
+
+"""
+    spectra_data = _get_spectra_data()
+    total_data = _get_total_data()
+    _, axs = plt.subplots(2, 1, figsize=(3.37, 4.5))
+    _make_spectra_plot(axs[0], spectra_data[0])
+    _min_resolved_plot(axs[1], total_data, TOTAL_SEPARATION_LIST, TOTAL_LOG10_NUM_ELECTRONS_LIST)
     #_min_rmse_plot(axs[1], total_data, TOTAL_SEPARATION_LIST, TOTAL_LOG10_NUM_ELECTRONS_LIST)
     _format_figure(axs)
     file_name = f'{FIGURES_DIR}/pax_performance2.eps'
     plt.savefig(file_name, dpi=600)
-
-def _make_spectra_plot(ax, data_list):
-    for ind, data in enumerate(data_list):
-        data = data['deconvolver']
-        offset = 2.0-ind*1.0
-        norm = 1.1*np.amax(data.ground_truth_y)
-        energy_loss = np.flipud(data.deconvolved_x-778)
-        ax.plot(energy_loss, 
-                offset+data.deconvolved_y_/norm, 'r',
-                label='Deconvolved')
-        ax.plot(energy_loss,
-                offset+data.ground_truth_y/norm, 'k--',
-                label='Ground Truth')
+"""
 
 def _get_spectra_data():
     spectra_data = _get_specified_data(SPECTRA_SEPARATION_LIST, SPECTRA_LOG10_NUM_ELECTRONS_LIST)
@@ -68,6 +64,19 @@ def _get_specified_data(separation_list, log10_num_electrons_list):
             data_list.append(data)
         data_list_list.append(data_list)
     return data_list_list
+
+def _make_spectra_plot(ax, data_list):
+    for ind, data in enumerate(data_list):
+        data = data['cv_deconvolver']
+        offset = 2.0-ind*1.0
+        norm = 1.1*np.amax(data.ground_truth_y)
+        energy_loss = np.flipud(data.deconvolved_x-778)
+        ax.plot(energy_loss, 
+                offset+data.deconvolved_y_/norm, 'r',
+                label='Deconvolved')
+        ax.plot(energy_loss,
+                offset+data.ground_truth_y/norm, 'k--',
+                label='Ground Truth')
     
 def _format_figure(axs):
     axs[0].set_xlim((-0.1, 0.15))
@@ -93,7 +102,7 @@ def _min_rmse_plot(ax, data_list_list, separations, log10_num_electrons):
     for data_list, separation in zip(data_list_list, separations):
         norm_rmse_threshold_list = []
         for ind, data in enumerate(data_list):
-            data = data['deconvolver']
+            data = data['cv_deconvolver']
             print(ind, separation)
             in_range = (data.deconvolved_x >= (778-2*separation)) & (data.deconvolved_x < 778)
             deconvolved_mse = mean_squared_error(data.deconvolved_y_[in_range], data.ground_truth_y[in_range])
@@ -117,7 +126,7 @@ def _min_resolved_plot(ax, data_list_list, separations, log10_num_electrons):
         print(separation)
         resolved_list = []
         for data in data_list:
-            data = data['deconvolver']
+            data = data['cv_deconvolver']
             resolved = is_doublet_resolved(
                     data.deconvolved_x,
                     data.deconvolved_y_,

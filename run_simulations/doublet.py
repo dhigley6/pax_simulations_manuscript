@@ -22,3 +22,4 @@ def run_fermi():
             _ = pax_simulation_pipeline.run(log10_num_electrons, 
                                             rixs=['doublet', separation], 
                                             photoemission='fermi', **PARAMETERS)
+        print('Completed separation '+str(separation))

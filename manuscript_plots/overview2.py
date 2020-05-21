@@ -8,7 +8,7 @@ import matplotlib.gridspec as gridspec
 import matplotlib.patheffects as PathEffects
 
 from pax_deconvolve.pax_simulations import model_photoemission, model_rixs, simulate_pax
-from pax_deconvolve.visualize.manuscript_plots import set_plot_params
+from manuscript_plots import set_plot_params
 set_plot_params.init_paper_small()
 
 def make_plot():
@@ -26,7 +26,7 @@ def make_plot():
     ax_ag_pax.plot(pax_spectrum['x'], pax_spectrum['y'], color='k')
     ax_fermi_pax.plot(fermi_pax_spectrum['x'], fermi_pax_spectrum['y'], color='k')
     _format_figure(f, ax_rixs, ax_ag, ax_fermi, ax_ag_pax, ax_fermi_pax)
-    plt.savefig('figures/2020_05_04_overview.eps', dpi=600)
+    plt.savefig('figures/overview.eps', dpi=600)
 
 def _format_figure(f, ax_rixs, ax_ag, ax_fermi, ax_ag_pax, ax_fermi_pax):
     ax_rixs.set_xlim((770, 780))
@@ -39,15 +39,15 @@ def _format_figure(f, ax_rixs, ax_ag, ax_fermi, ax_ag_pax, ax_fermi_pax):
     f.text(0.5, 0.02, 'Kinetic Energy (eV)', horizontalalignment='center')
     f.text(0.5, 0.36, 'Binding Energy (eV)', horizontalalignment='center')
     f.text(0.5, 0.69, 'Photon Energy (eV)', horizontalalignment='center')
-    txt = f.text(0.3, 0.95, 'Desired RIXS\nr(E)', transform=ax_rixs.transAxes,
+    txt = f.text(0.3, 0.95, 'RIXS\ns$(\hbar\omega)$', transform=ax_rixs.transAxes,
                 horizontalalignment='center', verticalalignment='top', 
                 fontsize=8, bbox=dict(facecolor='white', edgecolor='none', pad=0))
     txt.set_path_effects([PathEffects.withStroke(linewidth=5, foreground='w')])
-    txt = f.text(0.525, 0.6, 'Photoemission\np(E)', transform=f.transFigure,
+    txt = f.text(0.525, 0.6, 'Photoemission\nh(E)', transform=f.transFigure,
                 horizontalalignment='center', verticalalignment='top', fontsize=8)
     txt.set_path_effects([PathEffects.withStroke(linewidth=5, foreground='w')])
-    txt = f.text(0.55, 0.25, 
-       ''.join(['Measured PAX\n', r'$m(E) = r(E)\ast p(-E)$']), 
+    txt = f.text(0.57, 0.25, 
+       ''.join(['PAX\n', r'$m(kE) = s(kE)\ast p(-kE)$']), 
        transform=f.transFigure,
        horizontalalignment='center', verticalalignment='top', fontsize=8)
     txt.set_path_effects([PathEffects.withStroke(linewidth=5, foreground='w')])
