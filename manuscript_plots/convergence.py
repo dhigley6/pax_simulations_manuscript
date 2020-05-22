@@ -38,23 +38,28 @@ def _load_val_mse():
 
 def _make_deconvolved_mse_plot(ax, data_list):
     for ind, data in enumerate(data_list):
-        ax.plot(data[:, 1], data[:, 2], label=str(REGULARIZATION_PARAMETERS[ind]))
+        ax.loglog(data[:, 1], data[:, 2], label=str(REGULARIZATION_PARAMETERS[ind]))
 
 def _make_val_mse_plot(ax, data_list):
+    min_list = []
+    for data in data_list:
+        minimum = np.amin(data[:, 2])
+        min_list.append(minimum)
+    minimum = np.amin(min_list)
     for ind, data in enumerate(data_list):
-        ax.plot(data[:, 1], data[:, 2], label=str(REGULARIZATION_PARAMETERS[ind]))
+        ax.loglog(data[:, 1], data[:, 2]-minimum+10**(-3.5), label=str(REGULARIZATION_PARAMETERS[ind]))
     ax.axvline(77*4, color='k', linestyle='--')
 
 def _format_figure(axs):
-    axs[1].annotate('stopping\ncriterion met', (308, 0.106), xytext=(508, 0.106), arrowprops=dict(arrowstyle="->"), verticalalignment='center')
-    axs[0].set_ylim((0.05, 0.35))
-    axs[1].set_ylim((0.101, 0.108))
+    axs[1].annotate('stopping\ncriterion met', (308, 0.106), xytext=(20, 0.106), arrowprops=dict(arrowstyle="->"), verticalalignment='center')
+    axs[0].set_ylim((0.07, 20))
+    #axs[1].set_ylim((0.101, 0.108))
     axs[0].legend(loc='upper right', ncol=2, title='Regularization\nStrength (eV)')
     axs[0].set_ylabel('Deconvolved\nMSE (a.u.)')
-    axs[1].set_ylabel('Val. Reconstruction\nMSE (a.u.)')
+    axs[1].set_ylabel('Val. Reconstruction\nMSE-minimum+10$^{-3.5}$ (a.u.)')
     axs[1].set_xlabel('Iterations')
-    axs[0].text(0.9, 0.05, 'A', fontsize=10, weight='bold', horizontalalignment='center',
+    axs[0].text(0.1, 0.05, 'A', fontsize=10, weight='bold', horizontalalignment='center',
                    transform=axs[0].transAxes)
-    axs[1].text(0.9, 0.85, 'B', fontsize=10, weight='bold', horizontalalignment='center',
+    axs[1].text(0.1, 0.05, 'B', fontsize=10, weight='bold', horizontalalignment='center',
        transform=axs[1].transAxes)
     plt.tight_layout()

@@ -4,6 +4,7 @@
 import numpy as np 
 import matplotlib.pyplot as plt
 import datetime
+import pickle
 
 from pax_deconvolve.pax_simulations import simulate_pax
 import pax_simulation_pipeline
@@ -45,11 +46,27 @@ def _load_data():
     pax_spectra_list = []
     deconvolved_labels = []
     for i in LOG10_ELECTRONS_TO_PLOT:
-        data = pax_simulation_pipeline.load(i, rixs='schlappa', photoemission='ag')
-        deconvolved_list.append(data['deconvolver'])
+        data = _load_old(i, rixs='schlappa', photoemission='ag')
+        deconvolved_list.append(data['cv_deconvolver'])
         pax_spectra_list.append(data['pax_spectra'])
         deconvolved_labels.append('10$^'+str(int(i))+'$')
     return deconvolved_list, pax_spectra_list, deconvolved_labels
+
+def _load_old(log10_num_electrons, rixs='schlappa', photoemission='ag'):
+    """Load old data set
+    """
+    file_name = _get_old_filename(log10_num_electrons, rixs, photoemission)
+    with open(file_name, 'rb') as f:
+        data = pickle.load(f)
+    return data
+
+def _get_old_filename(log10_num_electrons, rixs, photoemission):
+    file_name = '{}/{}_{}_rixs_1E{}_with_extra.pickle'.format(
+        'old_simulated_results',
+        photoemission,
+        rixs,
+        log10_num_electrons)
+    return file_name
 
 def _single_deconvolved_plot(ax, deconvolved, norm):
     ax.plot(deconvolved.deconvolved_x, deconvolved.ground_truth_y/norm, 'k--', label='Ground Truth')
@@ -80,9 +97,9 @@ def _reconvolved_mse_plot(ax, deconvolved_list, deconvolved_labels, norm):
 def _cv_plot(ax, deconvolved_list, deconvolved_labels, norm):
     for deconvolved, deconvolved_label in zip(deconvolved_list, deconvolved_labels):
         cv_rmse = np.sqrt(deconvolved.cv_)/norm
-        line = ax.loglog(deconvolved.regularizer_widths[START_REG:], cv_rmse[START_REG:]-np.amin(cv_rmse[START_REG:])+1E-7, label=deconvolved_label)
+        line = ax.loglog(deconvolved.regularizer_widths[START_REG:], cv_rmse[START_REG:]-np.amin(cv_rmse[START_REG:])+1E-6, label=deconvolved_label)
         min_ind = np.argmin(deconvolved.cv_[START_REG:])
-        ax.loglog(deconvolved.regularizer_widths[START_REG:][min_ind], cv_rmse[START_REG:][min_ind]-np.amin(cv_rmse[START_REG:])+1E-7, marker='x', color=line[0].get_color())
+        ax.loglog(deconvolved.regularizer_widths[START_REG:][min_ind], cv_rmse[START_REG:][min_ind]-np.amin(cv_rmse[START_REG:])+1E-6, marker='x', color=line[0].get_color())
 
 def _format_figure(axs):
     axs[1, 0].set_xlim((396, 414))
@@ -102,8 +119,8 @@ def _format_figure(axs):
     axs[2, 0].set_ylabel('Intensity (a.u.)')
     axs[0, 1].set_ylabel('Deconvolved\nRMSE')
     axs[1, 1].set_ylabel('Train.\nReconstruction RMSE')
-    axs[2, 1].set_ylabel('Val. Reconstruction\nRMSE-minimum+10$^{-7}$')
-    axs[2, 1].set_xlabel('Regularization Hyperparameter (eV)')
+    axs[2, 1].set_ylabel('Val. Reconstruction\nRMSE-minimum+10$^{-6}$')
+    axs[2, 1].set_xlabel('Regularization Strength (eV)')
     axs[2, 1].set_xscale('log')
     axs[0, 0].text(0.9, 0.8, 'A', fontsize=10, weight='bold', horizontalalignment='center',
                    transform=axs[0, 0].transAxes)
@@ -115,7 +132,7 @@ def _format_figure(axs):
                    transform=axs[1, 1].transAxes)
     axs[2, 0].text(0.9, 0.8, 'E', fontsize=10, weight='bold', horizontalalignment='center',
                    transform=axs[2, 0].transAxes)
-    axs[2, 1].text(0.9, 0.2, 'F', fontsize=10, weight='bold', horizontalalignment='center',
+    axs[2, 1].text(0.1, 0.8, 'F', fontsize=10, weight='bold', horizontalalignment='center',
        transform=axs[2, 1].transAxes)
     plt.tight_layout(h_pad=0)
     axs[0, 1].legend(loc='upper right', fontsize=9, frameon=False, handlelength=0.8, title='Detected Electrons', ncol=3, columnspacing=0.5)
