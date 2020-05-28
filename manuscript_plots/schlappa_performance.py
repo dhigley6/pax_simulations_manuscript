@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from sklearn.metrics import mean_squared_error
+import pickle
 
 import pax_simulation_pipeline
 from manuscript_plots import set_plot_params
@@ -36,13 +37,13 @@ def make_figure():
     data_list = []
     num_counts = []
     for i in log10_counts:
-        data_list.append(pax_simulation_pipeline.load_with_extra(i, rixs='schlappa', photoemission='ag'))
+        data_list.append(_load_old(i, rixs='schlappa', photoemission='ag'))
         num_counts.append(10**i)
     spectra_log10_counts = [7.0, 5.0, 3.0]
     spectra_data_list = []
     spectra_num_counts = []
     for i in spectra_log10_counts:
-        spectra_data_list.append(pax_simulation_pipeline.load_with_extra(i, rixs='schlappa', photoemission='ag'))
+        spectra_data_list.append(_load_old(i, rixs='schlappa', photoemission='ag'))
         spectra_num_counts.append(i)
     f = plt.figure(figsize=(3.37, 5.5))
     grid = plt.GridSpec(4, 2)
@@ -126,9 +127,9 @@ def _format_figure(axs, spectra_counts):
     legend_elements = [Line2D([0], [0], color='k', linestyle='--', label='Ground Truth'),
                        Line2D([0], [0], color='r', label='Deconvolved')]
     axs[0].legend(handles=legend_elements, loc='upper left', frameon=False)
-    axs[0].text(-0.25, 2.3, '10$^'+str(int(spectra_counts[2]))+'$', ha='center', transform=axs[0].transData)
-    axs[0].text(-0.25, 1.3, '10$^'+str(int(spectra_counts[1]))+'$', ha='center', transform=axs[0].transData)
-    axs[0].text(-0.25, 0.3, '10$^'+str(int(spectra_counts[0]))+'$', ha='center', transform=axs[0].transData)
+    axs[0].text(-0, 2.4, '$N_e=10^'+str(int(spectra_counts[2]))+'$', ha='center', transform=axs[0].transData)
+    axs[0].text(-0, 1.4, '$N_e=10^'+str(int(spectra_counts[1]))+'$', ha='center', transform=axs[0].transData)
+    axs[0].text(-0, 0.4, '$N_e=10^'+str(int(spectra_counts[0]))+'$', ha='center', transform=axs[0].transData)
     plt.tight_layout()
     axs[0].text(0.9, 0.9, 'A', fontsize=10, weight='bold', horizontalalignment='center',
                    transform=axs[0].transAxes)
@@ -136,3 +137,19 @@ def _format_figure(axs, spectra_counts):
        transform=axs[1].transAxes)
     axs[2].text(0.9, 0.8, 'C', fontsize=10, weight='bold', horizontalalignment='center',
        transform=axs[2].transAxes)
+
+def _load_old(log10_num_electrons, rixs='schlappa', photoemission='ag'):
+    """Load old data set
+    """
+    file_name = _get_old_filename(log10_num_electrons, rixs, photoemission)
+    with open(file_name, 'rb') as f:
+        data = pickle.load(f)
+    return data
+
+def _get_old_filename(log10_num_electrons, rixs, photoemission):
+    file_name = '{}/{}_{}_rixs_1E{}_with_extra.pickle'.format(
+        'old_simulated_results',
+        photoemission,
+        rixs,
+        log10_num_electrons)
+    return file_name

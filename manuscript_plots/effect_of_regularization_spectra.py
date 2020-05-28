@@ -9,11 +9,11 @@ import matplotlib.pyplot as plt
 import pickle
 from joblib import Parallel, delayed
 
-from pax_deconvolve.visualize.manuscript_plots import set_plot_params
+from manuscript_plots import set_plot_params
 set_plot_params.init_paper_small()
 import pax_simulation_pipeline
 from pax_deconvolve.pax_simulations import simulate_pax
-from pax_deconvolve import LRDeconvolve
+import LRDeconvolve
 
 START_REGULARIZER = 0
 
@@ -23,7 +23,7 @@ def run_sim():
     results = {
         '4': results_4,
         '7': results_7}
-    file_name = 'simulated_results/test.pickle'
+    file_name = 'old_simulated_results/test.pickle'
     with open(file_name, 'wb') as f:
         pickle.dump(results, f)
 
@@ -43,7 +43,7 @@ def _run_deconvolution_set(log10_num_electrons):
 
 
 def load_sim():
-    file_name = 'simulated_results/test.pickle'
+    file_name = 'old_simulated_results/test.pickle'
     with open(file_name, 'rb') as f:
         results = pickle.load(f)
     return results
@@ -95,6 +95,18 @@ def _format_figure(f, axs):
         axs[1].text(1.1, height, regularizer_label, ha='center', clip_on=False,
             bbox=dict(facecolor='white', edgecolor='none', pad=0),
             transform=axs[0].transAxes)
+    axs[1].text(0.27, 0.73, 'underfit', ha='center', clip_on=False,
+                transform=axs[0].transAxes)
+    axs[1].text(0.27, 0.43, 'good', ha='center', clip_on=False,
+                transform=axs[0].transAxes)
+    axs[1].text(0.27, 0.15, 'overfit', ha='center', clip_on=False,
+                transform=axs[0].transAxes)
+    axs[1].text(1.96, 0.73, 'under-\nfit', ha='center', clip_on=False,
+                transform=axs[0].transAxes)
+    axs[1].text(1.96, 0.43, 'under-\nfit', ha='center', clip_on=False,
+                transform=axs[0].transAxes)
+    axs[1].text(1.96, 0.15, 'good', ha='center', clip_on=False,
+                transform=axs[0].transAxes)
     big_ax = _make_big_dummy_ax(plt.gcf())
     big_ax.plot([], [], 'k--', label='Ground Truth')
     big_ax.plot([], [], 'r', label='Deconvolved')
