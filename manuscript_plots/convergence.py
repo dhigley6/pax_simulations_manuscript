@@ -53,7 +53,7 @@ def _make_val_mse_plot(ax, data_list):
 def _format_figure(axs):
     axs[1].annotate('stopping\ncriterion met', (308, 0.106), xytext=(20, 0.106), arrowprops=dict(arrowstyle="->"), verticalalignment='center')
     axs[0].set_ylim((0.07, 20))
-    #axs[1].set_ylim((0.101, 0.108))
+    axs[1].set_xlim((1, 1E3))
     axs[0].legend(loc='upper right', ncol=2, title='Regularization\nStrength (eV)')
     axs[0].set_ylabel('Deconvolved\nMSE (a.u.)')
     axs[1].set_ylabel('Val. Reconstruction\nMSE-minimum+10$^{-3.5}$ (a.u.)')
