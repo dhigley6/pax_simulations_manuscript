@@ -33,7 +33,7 @@ def make_figure():
     _, axs = plt.subplots(2, 1, figsize=(3.37, 4.5))
     _make_spectra_plot(axs[0], spectra_data[0])
     _min_resolved_plot(axs[1], total_data, TOTAL_SEPARATION_LIST, TOTAL_LOG10_NUM_ELECTRONS_LIST)
-    #_format_figure(axs)
+    #_format_figure(axs), 
 
 """
     spectra_data = _get_spectra_data()
