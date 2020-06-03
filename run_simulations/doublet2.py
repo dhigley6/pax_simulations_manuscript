@@ -9,9 +9,18 @@ from pax_deconvolve.deconvolution import deconvolvers
 from pax_deconvolve.pax_simulations import simulate_pax
 
 LOG10_COUNTS_LIST = [7.0]
-SEPARATIONS = [0.035, 0.05, 0.1]
+SEPARATIONS = [0.025, 0.045, 0.07]
 NUM_SIMULATIONS = 3
 NUM_BOOTSTRAPS = 3
+ITERATIONS = 1E5
+
+def load():
+    data_list = []
+    for separation in SEPARATIONS:
+        data = load_set(separation, 7.0)
+        data_list.append(data)
+    return data_list
+
 
 def load_set(separation, log10_counts):
     file_name = 'new_simulated_results/doublet2_'+str(separation)+'_'+str(log10_counts)+'.pickle'
@@ -39,13 +48,13 @@ def run_set(separation, log10_counts):
             impulse_response['y'],
             pax_spectra['x'],
             np.logspace(-4, -2, 10),
-            1E2,
+            ITERATIONS,
             xray_xy['y']
         )
         _ = deconvolver.fit(np.array(pax_spectra['y']))
         deconvolved_list.append(deconvolver)
         print(f'Completed {str(log10_counts)} counts, {str(separation)} separation, {str(i)} iteration')
-    bootstrap_results = _run_bootstraps(impulse_response, pax_spectra, xray_xy)
+    bootstrap_results = _run_bootstraps(impulse_response, pax_spectra, xray_xy, deconvolver.best_regularization_strength_)
     to_save = {
         'deconvolved': deconvolved_list,
         'bootstraps': bootstrap_results,
@@ -56,19 +65,19 @@ def run_set(separation, log10_counts):
         pickle.dump(to_save, f)
     
 
-def _run_bootstraps(impulse_response, pax_spectra, xray_xy):
+def _run_bootstraps(impulse_response, pax_spectra, xray_xy, regularization_strength):
     bootstrap_deconvolved_list = []
     for _ in range(NUM_BOOTSTRAPS):
         bootstrapped_pax = {
             'x': pax_spectra['x'],
             'y': bootstrap_pax_set(pax_spectra['y'])
         }
-        deconvolver = deconvolvers.LRFisterGrid(
+        deconvolver = deconvolvers.LRFisterDeconvolve(
             impulse_response['x'],
             impulse_response['y'],
             bootstrapped_pax['x'],
-            np.logspace(-4, -2, 10),
-            1E2,
+            regularization_strength,
+            ITERATIONS,
             xray_xy['y']
         )
         _ = deconvolver.fit(np.array(bootstrapped_pax['y']))
