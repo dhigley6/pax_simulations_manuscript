@@ -43,11 +43,11 @@ def _format_figure(f, ax_rixs, ax_ag, ax_fermi, ax_ag_pax, ax_fermi_pax):
                 horizontalalignment='center', verticalalignment='top', 
                 fontsize=8, bbox=dict(facecolor='white', edgecolor='none', pad=0))
     txt.set_path_effects([PathEffects.withStroke(linewidth=5, foreground='w')])
-    txt = f.text(0.525, 0.6, 'Photoemission\nh(E)', transform=f.transFigure,
+    txt = f.text(0.525, 0.6, 'Photoemission\nh(-E)', transform=f.transFigure,
                 horizontalalignment='center', verticalalignment='top', fontsize=8)
     txt.set_path_effects([PathEffects.withStroke(linewidth=5, foreground='w')])
     txt = f.text(0.57, 0.25, 
-       ''.join(['PAX\n', r'$m(kE) = s(kE)\ast p(-kE)$']), 
+       ''.join(['PAX\n', r'$m(kE) = s(kE)\ast h(kE)$']), 
        transform=f.transFigure,
        horizontalalignment='center', verticalalignment='top', fontsize=8)
     txt.set_path_effects([PathEffects.withStroke(linewidth=5, foreground='w')])
