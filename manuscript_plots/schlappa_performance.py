@@ -45,11 +45,20 @@ def make_figure():
     for i in spectra_log10_counts:
         spectra_data_list.append(_load_old(i, rixs='schlappa', photoemission='ag'))
         spectra_num_counts.append(i)
-    f = plt.figure(figsize=(3.37, 5.5))
-    grid = plt.GridSpec(4, 2)
-    ax_spectra = f.add_subplot(grid[:2, :])
-    ax_deconvolved_mse = f.add_subplot(grid[2, :])
-    ax_fwhm = f.add_subplot(grid[3, :], sharex=ax_deconvolved_mse)
+    f = plt.figure(figsize=(3.37, 6))
+    grid = plt.GridSpec(5, 2)
+    ax_irf = f.add_subplot(grid[0, :])
+    ax_irf.plot(-1*data_list[0]['cv_deconvolver'].impulse_response_x, data_list[0]['cv_deconvolver'].impulse_response_y, color='k')
+    ax_irf.set_xlabel('Binding Energy (eV)')
+    ax_irf.set_ylabel('Intensity\n(a.u.)')
+    ax_irf.text(0.9, 0.8, 'A', fontsize=10, weight='bold', horizontalalignment='center',
+       transform=ax_irf.transAxes)
+    ax_irf.text(0.03, 0.8, 'Model Photoemission', fontsize=9, horizontalalignment='left',
+       transform=ax_irf.transAxes)
+    ax_irf.set_xlim((365, 380))
+    ax_spectra = f.add_subplot(grid[1:3, :])
+    ax_deconvolved_mse = f.add_subplot(grid[3, :])
+    ax_fwhm = f.add_subplot(grid[4, :], sharex=ax_deconvolved_mse)
     _spectra_plot(ax_spectra, spectra_data_list)
     _rmse_plot(ax_deconvolved_mse, num_counts, data_list)
     _fwhm_plot(ax_fwhm, num_counts, data_list)
@@ -131,11 +140,11 @@ def _format_figure(axs, spectra_counts):
     axs[0].text(-0, 1.4, '$N_e=10^'+str(int(spectra_counts[1]))+'$', ha='center', transform=axs[0].transData)
     axs[0].text(-0, 0.4, '$N_e=10^'+str(int(spectra_counts[0]))+'$', ha='center', transform=axs[0].transData)
     plt.tight_layout()
-    axs[0].text(0.9, 0.9, 'A', fontsize=10, weight='bold', horizontalalignment='center',
+    axs[0].text(0.9, 0.9, 'B', fontsize=10, weight='bold', horizontalalignment='center',
                    transform=axs[0].transAxes)
-    axs[1].text(0.9, 0.8, 'B', fontsize=10, weight='bold', horizontalalignment='center',
+    axs[1].text(0.9, 0.8, 'C', fontsize=10, weight='bold', horizontalalignment='center',
        transform=axs[1].transAxes)
-    axs[2].text(0.9, 0.8, 'C', fontsize=10, weight='bold', horizontalalignment='center',
+    axs[2].text(0.9, 0.8, 'D', fontsize=10, weight='bold', horizontalalignment='center',
        transform=axs[2].transAxes)
 
 def _load_old(log10_num_electrons, rixs='schlappa', photoemission='ag'):

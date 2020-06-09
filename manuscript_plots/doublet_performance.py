@@ -87,7 +87,8 @@ def _format_figure(axs):
     axs[1].set_xlabel('Doublet Separation (eV)')
     legend_elements = [Line2D([0], [0], color='k', linestyle='--', label='Ground Truth'),
                        Line2D([0], [0], color='r', label='Deconvolved')]
-    axs[0].legend(handles=legend_elements, loc='upper left', frameon=False, ncol=2)
+    axs[0].legend(handles=legend_elements, loc='lower left', 
+                  bbox_to_anchor=(0,0, 1.01), ncol=2, borderaxespad=0, frameon=False)
     axs[1].set_ylabel('Minimum Counts for\nPeak Intensity More than\n5x Gap Strength')
     for ind, log10_num_electrons in enumerate(SPECTRA_LOG10_NUM_ELECTRONS_LIST):
         axs[0].text(0.125, 2+0.25-ind, '10$^'+str(int(log10_num_electrons))+'$')
