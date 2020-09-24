@@ -13,7 +13,7 @@ from pax_deconvolve.deconvolution import deconvolvers
 from pax_deconvolve.pax_simulations import simulate_pax
 
 # Set global simulation parameters
-PROCESSED_DATA_DIR = os.path.join(os.path.dirname(__file__), 'new_simulated_results')
+PROCESSED_DATA_DIR = os.path.join(os.path.dirname(__file__), 'simulated_results')
 # Set default simulation parameters
 DEFAULT_PARAMETERS = {
     'energy_loss': np.arange(-8, 10, 0.005),
@@ -108,7 +108,7 @@ def print_parameters(log10_num_electrons, rixs='schlappa', photoemission='ag'):
     pprint.pprint(to_print)
 
 def _get_filename(log10_num_electrons, rixs, photoemission):
-    file_name = '{}/{}_{}_rixs_1E{}_with_extra.pickle'.format(
+    file_name = '{}/{}_{}_rixs_1E{}.pickle'.format(
         PROCESSED_DATA_DIR,
         photoemission,
         rixs,
