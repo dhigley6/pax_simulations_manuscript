@@ -12,7 +12,7 @@ LOG10_COUNTS_LIST = [7.0]
 SEPARATIONS = [0.025, 0.045, 0.07]
 NUM_SIMULATIONS = 3
 NUM_BOOTSTRAPS = 3
-ITERATIONS = 1E5
+ITERATIONS = 1E3
 
 def load():
     data_list = []
@@ -23,7 +23,7 @@ def load():
 
 
 def load_set(separation, log10_counts):
-    file_name = 'new_simulated_results/doublet2_'+str(separation)+'_'+str(log10_counts)+'.pickle'
+    file_name = 'simulated_results/doublet2_'+str(separation)+'_'+str(log10_counts)+'.pickle'
     with open(file_name, 'rb') as f:
         data = pickle.load(f)
     return data
@@ -60,7 +60,7 @@ def run_set(separation, log10_counts):
         'bootstraps': bootstrap_results,
         'ground_truth': xray_xy
     }
-    file_name = 'new_simulated_results/doublet2_'+str(separation)+'_'+str(log10_counts)+'.pickle'
+    file_name = 'simulated_results/doublet2_'+str(separation)+'_'+str(log10_counts)+'.pickle'
     with open(file_name, 'wb') as f:
         pickle.dump(to_save, f)
     
