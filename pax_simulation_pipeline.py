@@ -16,10 +16,10 @@ from pax_deconvolve.pax_simulations import simulate_pax
 PROCESSED_DATA_DIR = os.path.join(os.path.dirname(__file__), 'simulated_results')
 # Set default simulation parameters
 DEFAULT_PARAMETERS = {
-    'energy_loss': np.arange(-8, 10, 0.005),
-    'iterations': 1E2,
+    'energy_loss': np.arange(-8, 10, 0.01),
+    'iterations': 1E5,
     'simulations': 1000,
-    'cv_fold': 4,
+    'cv_fold': 3,
     'regularizer_widths': np.logspace(-3, -1, 10)
 }
 # good energy_loss for Ag 3d levels with Schlappa RIXS: np.arange(-8, 10, 0.005)
@@ -31,9 +31,11 @@ DEFAULT_PARAMETERS = {
 def run(log10_num_electrons, rixs='schlappa', photoemission='ag', num_additional=25, **kwargs):
     parameters = DEFAULT_PARAMETERS
     parameters.update(kwargs)
+    print('Starting cv deconvolver')
     cv_deconvolver, pax_spectra = _run_cv(log10_num_electrons, rixs, photoemission, 
                              parameters['regularizer_widths'], parameters)
     regularization_strength = cv_deconvolver.best_regularization_strength_
+    print('Completed cv deconvolver')
     additional_deconvolutions = Parallel(n_jobs=-1)(delayed(_run_single_regularizer)(log10_num_electrons, rixs, photoemission, regularization_strength, parameters) for _ in range(num_additional))
     to_save = {
         'cv_deconvolver': cv_deconvolver,
