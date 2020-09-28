@@ -18,10 +18,6 @@ def load_data():
     return data
 
 
-# def doublet_performance2():
-#    data = doublet2.load()
-
-
 def doublet_performance2():
     data = doublet2.load()
     f = plt.figure(figsize=(3.37, 4.5))

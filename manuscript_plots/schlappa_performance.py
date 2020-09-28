@@ -17,12 +17,11 @@ set_plot_params.init_paper_small()
 FIGURES_DIR = "figures"
 # List of base 10 logarithm of detected electrons to simulate:
 LOG10_COUNTS_LIST = [7.0, 6.5, 6.0, 5.5, 5.0, 4.5, 4.0, 3.5, 3.0, 2.5]
-# LOG10_COUNTS_LIST = [5.0, 4.5, 4.0, 3.5, 3.0, 2.5]
 
 # Below are the parameters to run the simulations with
 SCHLAPPA_PARAMETERS = {
     "energy_loss": np.arange(-8, 10, 0.01),
-    "iterations": int(1e4),
+    "iterations": int(1e5),
     "simulations": 1000,
     "cv_fold": 3,
     "regularizer_widths": np.logspace(-3, -1, 10),
@@ -44,7 +43,6 @@ def make_figure():
     data_list, num_counts = _load_data(LOG10_COUNTS_LIST)
     spectra_log10_counts = [7.0, 5.0, 3.0]
     spectra_data_list, spectra_num_counts = _load_data(spectra_log10_counts)
-    a = 1 / 0
     f = plt.figure(figsize=(3.37, 4.5))
     grid = plt.GridSpec(3, 2)
     ax_irf = f.add_subplot(grid[0, :])
