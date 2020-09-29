@@ -16,10 +16,11 @@ from manuscript_plots import schlappa_performance
 def make_figure():
     log10_counts = schlappa_performance.LOG10_COUNTS_LIST
     data_list, num_counts = schlappa_performance._load_data(log10_counts)
-    f, axs = plt.subplots(2, 1, sharex=True, figsize=(3.37, 3.37))
+    f, axs = plt.subplots(2, 1, sharex=True, figsize=(3.37, 2.5))
     _rmse_plot(axs[0], num_counts, data_list)
     _fwhm_plot(axs[1], num_counts, data_list)
     _format_figure(axs)
+    plt.savefig('figures/performance1_quant.eps', dpi=600)
 
 
 def _format_figure(axs):
@@ -46,6 +47,7 @@ def _format_figure(axs):
         transform=axs[1].transAxes,
     )
     axs[1].axhline(83.25, linestyle="--", color="k")
+    axs[0].set_ylim((0, 0.06))
 
 
 def _rmse_plot(ax, num_electrons, data_list):
@@ -67,16 +69,16 @@ def _rmse_plot(ax, num_electrons, data_list):
 
 def _fwhm_plot(ax, num_electrons, data_list):
     fwhm_list = []
-    for data in data_list:
+    for data in data_list[:-2]:
         data = data["additional_deconvolutions"]
         current_fwhms = []
         for deconvolved in data:
             fwhm = _get_fwhm(deconvolved.deconvolved_x, deconvolved.deconvolved_y_)
             current_fwhms.append(fwhm)
-        fwhm = np.mean(current_fwhms)
+        fwhm = np.median(current_fwhms)
         fwhm_list.append(fwhm)
     ax.semilogx(
-        num_electrons, 1e3 * np.array(fwhm_list), color="r", marker="o", markersize=4
+        num_electrons[:-2], 1e3 * np.array(fwhm_list), color="r", marker="o", markersize=4
     )
 
 
