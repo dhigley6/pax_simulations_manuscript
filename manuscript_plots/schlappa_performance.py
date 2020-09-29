@@ -61,7 +61,7 @@ def _format_figure(f, ax_irf, ax_pax, ax_spectra, grid, spectra_log10_counts):
     ax_irf.set_xlabel("Binding Energy (eV)")
     ax_irf.set_ylabel("Intensity (a.u.)")
     ax_irf.text(
-        0.9,
+        0.1,
         0.8,
         "A",
         fontsize=10,
@@ -70,11 +70,11 @@ def _format_figure(f, ax_irf, ax_pax, ax_spectra, grid, spectra_log10_counts):
         transform=ax_irf.transAxes,
     )
     ax_irf.text(
-        0.03,
+        0.97,
         0.8,
         "Model Photoemission",
         fontsize=9,
-        horizontalalignment="left",
+        horizontalalignment="right",
         transform=ax_irf.transAxes,
     )
     ax_irf.set_xlim((365, 380))
@@ -95,6 +95,7 @@ def _format_figure(f, ax_irf, ax_pax, ax_spectra, grid, spectra_log10_counts):
         transform=ax_pax.transAxes,
     )
     ax_pax.set_xlim((415, 430))
+    ax_irf.invert_xaxis()
     ax_spectra.invert_xaxis()
     ax_spectra.set_ylim((-0.2, 3.5))
     ax_spectra.set_xlabel("Energy Loss (eV)")
