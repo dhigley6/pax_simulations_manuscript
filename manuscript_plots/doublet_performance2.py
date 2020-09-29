@@ -120,7 +120,7 @@ def _format_figure(f, ax_irf, ax_pax, ax_spectra, grid):
     ax_irf.set_xlabel("Binding Energy (eV)")
     ax_irf.set_ylabel("Intensity (a.u.)")
     ax_irf.text(
-        0.9,
+        0.1,
         0.7,
         "A",
         fontsize=10,
@@ -129,11 +129,11 @@ def _format_figure(f, ax_irf, ax_pax, ax_spectra, grid):
         transform=ax_irf.transAxes,
     )
     ax_irf.text(
-        0.03,
+        0.97,
         0.65,
         "Model\nPhotoemission",
         fontsize=9,
-        horizontalalignment="left",
+        horizontalalignment="right",
         transform=ax_irf.transAxes,
     )
     ax_irf.set_xlim((-0.5, 0.5))
@@ -145,7 +145,7 @@ def _format_figure(f, ax_irf, ax_pax, ax_spectra, grid):
     ax_pax.set_ylabel("Intensity (a.u.)")
     ax_pax.set_xlabel("Kinetic Energy (eV)")
     ax_pax.text(
-        0.1,
+        0.9,
         0.76,
         "B",
         fontsize=10,
@@ -172,6 +172,7 @@ def _format_figure(f, ax_irf, ax_pax, ax_spectra, grid):
         horizontalalignment="center",
         transform=ax_spectra.transAxes,
     )
+    ax_irf.invert_xaxis()
     grid.tight_layout(f)
     texts = []
     # texts.append(ax_spectra.text(7.8, 2.4, '$N_e=10^'+str(int(spectra_log10_counts[2]))+'$', ha='center', transform=ax_spectra.transData))

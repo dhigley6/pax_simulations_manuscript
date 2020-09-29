@@ -8,7 +8,7 @@ import pickle
 from pax_deconvolve.deconvolution import deconvolvers
 from pax_deconvolve.pax_simulations import simulate_pax
 
-LOG10_COUNTS_LIST = [7.0]
+LOG10_COUNTS_LIST = [6.0]
 SEPARATIONS = [0.025, 0.045, 0.07]
 NUM_SIMULATIONS = 3
 NUM_BOOTSTRAPS = 3
@@ -18,7 +18,7 @@ ITERATIONS = 1e5
 def load():
     data_list = []
     for separation in SEPARATIONS:
-        data = load_set(separation, 7.0)
+        data = load_set(separation, LOG10_COUNTS_LIST[0])
         data_list.append(data)
     return data_list
 
