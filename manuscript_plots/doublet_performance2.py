@@ -156,7 +156,7 @@ def _format_figure(f, ax_irf, ax_pax, ax_spectra, grid):
     ax_pax.set_xlim((778.45, 778.65))
     ax_spectra.set_xlim((-0.05, 0.2))
     ax_spectra.invert_xaxis()
-    ax_spectra.set_ylim((-0.2, 3.5))
+    ax_spectra.set_ylim((-0.2, 4.0))
     ax_spectra.set_xlabel("Energy Loss (eV)")
     legend_elements = [
         Line2D([0], [0], color="k", linestyle="--", label="Ground Truth"),
