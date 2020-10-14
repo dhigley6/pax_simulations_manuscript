@@ -4,6 +4,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
+import matplotlib.patheffects as path_effects
 
 from run_simulations import doublet2
 from manuscript_plots import set_plot_params
@@ -175,9 +176,9 @@ def _format_figure(f, ax_irf, ax_pax, ax_spectra, grid):
     ax_irf.invert_xaxis()
     grid.tight_layout(f)
     texts = []
-    # texts.append(ax_spectra.text(7.8, 2.4, '$N_e=10^'+str(int(spectra_log10_counts[2]))+'$', ha='center', transform=ax_spectra.transData))
-    # texts.append(ax_spectra.text(7.8, 1.4, '$N_e=10^'+str(int(spectra_log10_counts[1]))+'$', ha='center', transform=ax_spectra.transData))
-    # texts.append(ax_spectra.text(7.8, 0.4, '$N_e=10^'+str(int(spectra_log10_counts[0]))+'$', ha='center', transform=ax_spectra.transData))
+    texts.append(ax_spectra.text(0.2, 2.25, '$\Delta E = 70$ meV', ha='center', transform=ax_spectra.transData))
+    texts.append(ax_spectra.text(0.2, 1.25, '$\Delta E = 45$ meV', ha='center', transform=ax_spectra.transData))
+    texts.append(ax_spectra.text(0.2, 0.25, '$\Delta E = 25$ meV', ha='center', transform=ax_spectra.transData))
     for text in texts:
         text.set_path_effects(
             [
