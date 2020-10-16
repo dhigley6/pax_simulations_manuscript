@@ -13,6 +13,10 @@ set_plot_params.init_paper_small()
 
 FIGURES_DIR = "figures"
 
+# shift to apply to kinetic energies to correct for incorrectly defined IRF
+#   x-values in original simulations
+KE_SHIFT = 0.6
+
 
 def load_data():
     data = doublet2.load()
@@ -47,13 +51,13 @@ def _pax_plot(ax, data_list):
         offset = ind * 1.0
         norm = 1.1 * np.amax(deconvolved.measured_y_)
         ax.plot(
-            deconvolved.convolved_x,
+            deconvolved.convolved_x-KE_SHIFT,
             offset + deconvolved.reconstruction_y_ / norm,
             "r",
             label="Reconstruction",
         )
         ax.plot(
-            deconvolved.convolved_x,
+            deconvolved.convolved_x-KE_SHIFT,
             offset + deconvolved.measured_y_ / norm,
             "k--",
             label="PAX",
@@ -154,7 +158,7 @@ def _format_figure(f, ax_irf, ax_pax, ax_spectra, grid):
         horizontalalignment="center",
         transform=ax_pax.transAxes,
     )
-    ax_pax.set_xlim((778.45, 778.65))
+    ax_pax.set_xlim((777.85, 778.05))
     ax_spectra.set_xlim((-0.05, 0.2))
     ax_spectra.invert_xaxis()
     ax_spectra.set_ylim((-0.2, 4.0))

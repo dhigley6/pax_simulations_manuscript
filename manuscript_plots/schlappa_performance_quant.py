@@ -26,7 +26,7 @@ def make_figure():
 def _format_figure(axs):
     axs[0].set_ylabel("Norm. RMSE\n(a.u.)")
     axs[1].set_ylabel("FWHM of\nFirst Peak (meV)")
-    axs[1].set_xlabel("Detected Electrons")
+    axs[1].set_xlabel("Simulated Detected Electrons")
     plt.tight_layout()
     axs[0].text(
         0.9,
@@ -68,8 +68,9 @@ def _rmse_plot(ax, num_electrons, data_list):
 
 
 def _fwhm_plot(ax, num_electrons, data_list):
+    TOO_LOW = -2     # Counts below which a well-defined first loss peak isn't reliably retrieved
     fwhm_list = []
-    for data in data_list[:-2]:
+    for data in data_list[:TOO_LOW]:
         data = data["additional_deconvolutions"]
         current_fwhms = []
         for deconvolved in data:
@@ -78,7 +79,7 @@ def _fwhm_plot(ax, num_electrons, data_list):
         fwhm = np.median(current_fwhms)
         fwhm_list.append(fwhm)
     ax.semilogx(
-        num_electrons[:-2], 1e3 * np.array(fwhm_list), color="r", marker="o", markersize=4
+        num_electrons[:TOO_LOW], 1e3 * np.array(fwhm_list), color="r", marker="o", markersize=4
     )
 
 

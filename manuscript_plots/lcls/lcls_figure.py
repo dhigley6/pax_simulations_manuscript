@@ -15,6 +15,7 @@ from pax_deconvolve import visualize
 set_plot_params.init_paper_small()
 
 PHOTON_ENERGY_OFFSET = 804.23    # (eV) (determined empirically)
+KE_OFFSET = 12.66    # (eV) (determine empirically)
 
 def lcls_figure():
     specs = pax_lcls2016.get_lcls_specs()
@@ -37,13 +38,13 @@ def lcls_figure():
 
 def _irf_plot(ax_irf, specs):
     norm = np.amax(specs['psf']['y'])
-    ax_irf.plot(specs['psf']['binding_energy'], specs['psf']['y']/norm, 'k')
+    ax_irf.plot(specs['psf']['binding_energy']+KE_OFFSET, specs['psf']['y']/norm, 'k')
 
 def _pax_plot(ax_pax, specs, deconvolver_list):
     for ind, deconvolved in enumerate(deconvolver_list):
         norm = np.amax(deconvolved.measured_y_)
-        ax_pax.plot(deconvolved.convolved_x, -1.1*ind+deconvolved.measured_y_/norm, 'k--', label='PAX')
-        ax_pax.plot(deconvolved.convolved_x, -1.1*ind+deconvolved.reconstruction_y_/norm, 'r', label='Reconstruction')
+        ax_pax.plot(deconvolved.convolved_x-KE_OFFSET, -1.1*ind+deconvolved.measured_y_/norm, 'k--', label='PAX')
+        ax_pax.plot(deconvolved.convolved_x-KE_OFFSET, -1.1*ind+deconvolved.reconstruction_y_/norm, 'r', label='Reconstruction')
 
 
 def _spectra_plot(ax_spectra, specs, deconvolver_list):
@@ -76,8 +77,8 @@ def _format_figure(ax_irf, ax_pax, ax_spectra, specs):
     ax_irf.text(0.9, 0.8, 'A', transform=ax_irf.transAxes, **textprops)
     ax_pax.text(0.1, 0.85, 'B', transform=ax_pax.transAxes, **textprops)
     ax_spectra.text(0.9, 0.85, 'C', transform=ax_spectra.transAxes, **textprops)
-    ax_irf.set_xlim((65, 88))
-    ax_pax.set_xlim((690, 720))
+    ax_irf.set_xlim((77.5, 100))
+    ax_pax.set_xlim((678, 707))
     ax_pax.set_ylim((-9, 2.5))
     ax_spectra.set_xlim((-5, 15))
     ax_spectra.set_ylim((-9, 2.5))

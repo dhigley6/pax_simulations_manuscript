@@ -6,8 +6,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 import matplotlib.patheffects as path_effects
-from sklearn.metrics import mean_squared_error
-import pickle
 
 import pax_simulation_pipeline
 from manuscript_plots import set_plot_params
@@ -27,6 +25,9 @@ SCHLAPPA_PARAMETERS = {
     "regularizer_widths": np.logspace(-3, -1, 10),
 }
 
+# shift to apply to kinetic energies to correct for incorrectly defined IRF
+#   x-values in original simulations
+KE_SHIFT = 18
 
 def _load_data(log10_counts_to_load):
     data_list = []
@@ -61,7 +62,7 @@ def _format_figure(f, ax_irf, ax_pax, ax_spectra, grid, spectra_log10_counts):
     ax_irf.set_xlabel("Binding Energy (eV)")
     ax_irf.set_ylabel("Intensity (a.u.)")
     ax_irf.text(
-        0.1,
+        0.9,
         0.8,
         "A",
         fontsize=10,
@@ -70,11 +71,11 @@ def _format_figure(f, ax_irf, ax_pax, ax_spectra, grid, spectra_log10_counts):
         transform=ax_irf.transAxes,
     )
     ax_irf.text(
-        0.97,
+        0.03,
         0.8,
         "Model Photoemission",
         fontsize=9,
-        horizontalalignment="right",
+        horizontalalignment="left",
         transform=ax_irf.transAxes,
     )
     ax_irf.set_xlim((365, 380))
@@ -94,7 +95,7 @@ def _format_figure(f, ax_irf, ax_pax, ax_spectra, grid, spectra_log10_counts):
         horizontalalignment="center",
         transform=ax_pax.transAxes,
     )
-    ax_pax.set_xlim((415, 430))
+    ax_pax.set_xlim((415-KE_SHIFT, 430-KE_SHIFT))
     ax_irf.invert_xaxis()
     ax_spectra.invert_xaxis()
     ax_spectra.set_ylim((-0.2, 3.5))
@@ -154,7 +155,9 @@ def _format_figure(f, ax_irf, ax_pax, ax_spectra, grid, spectra_log10_counts):
 def _irf_plot(ax, data_list):
     y = data_list[0]["cv_deconvolver"].impulse_response_y
     y = y / np.amax(y)
-    ax.plot(-1 * data_list[0]["cv_deconvolver"].impulse_response_x, y, "k")
+    # correct x for incorrect definition in original simulations:
+    correct_irf_x = np.flipud(data_list[0]['cv_deconvolver'].impulse_response_x)
+    ax.plot(-1 * correct_irf_x, y, "k")
 
 
 def _pax_plot(ax, data_list):
@@ -165,13 +168,13 @@ def _pax_plot(ax, data_list):
         if ind in [0]:
             # plot PAX second
             ax.plot(
-                deconvolved.convolved_x,
+                deconvolved.convolved_x-KE_SHIFT,
                 offset + deconvolved.reconstruction_y_ / norm,
                 "r",
                 label="Reconstruction",
             )
             ax.plot(
-                deconvolved.convolved_x,
+                deconvolved.convolved_x-KE_SHIFT,
                 offset + deconvolved.measured_y_ / norm,
                 "k--",
                 label="PAX",
@@ -179,13 +182,13 @@ def _pax_plot(ax, data_list):
         else:
             # plot PAX first
             ax.plot(
-                deconvolved.convolved_x,
+                deconvolved.convolved_x-KE_SHIFT,
                 offset + deconvolved.measured_y_ / norm,
                 "k--",
                 label="PAX",
             )
             ax.plot(
-                deconvolved.convolved_x,
+                deconvolved.convolved_x-KE_SHIFT,
                 offset + deconvolved.reconstruction_y_ / norm,
                 "r",
                 label="Reconstruction",
