@@ -8,11 +8,11 @@ import pickle
 from pax_deconvolve.deconvolution import deconvolvers
 from pax_deconvolve.pax_simulations import simulate_pax
 
-LOG10_COUNTS_LIST = [6.0]
+LOG10_COUNTS_LIST = [5.0]
 SEPARATIONS = [0.025, 0.045, 0.07]
 NUM_SIMULATIONS = 3
 NUM_BOOTSTRAPS = 3
-ITERATIONS = 1e5
+ITERATIONS = 1e5  # use 1e5 for real simulations
 
 
 def load():
