@@ -98,7 +98,7 @@ def _format_figure(ax_irf, ax_pax, ax_spectra, specs):
         incident_photon_energy = specs['incident_photon_energy'][ind]
         offset = -1.1*ind
         label = ''.join([str(incident_photon_energy), ' eV'])
-        text = ax_spectra.text(17.5, offset+0.3, label, ha='center', transform=ax_spectra.transData)
+        text = ax_spectra.text(16.25, offset+0.3, label, ha='center', transform=ax_spectra.transData)
         text.set_path_effects(
             [
                 path_effects.Stroke(linewidth=5, foreground='white'),
