@@ -14,7 +14,7 @@ from pax_deconvolve import visualize
 
 set_plot_params.init_paper_small()
 
-PHOTON_ENERGY_OFFSET = 804.23    # (eV) (determined empirically)
+PHOTON_ENERGY_OFFSET = 804.23-23.8    # (eV) (determined empirically)
 KE_OFFSET = 12.66    # (eV) (determine empirically)
 
 def lcls_figure():
